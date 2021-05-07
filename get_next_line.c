@@ -30,11 +30,9 @@ void    ft_strclr(char *s)
 char    *ft_strcpy(char *dst, const char *src)
 {
     size_t  i;
-    unsigned char *src1;
 
     i = 0;
-    src1 = (unsigned char *)src;
-    while (src1[i] != '\0')
+    while (src[i] != '\0')
     {
         dst[i] = src[i];
         i++;
@@ -42,90 +40,151 @@ char    *ft_strcpy(char *dst, const char *src)
     dst[i] = '\0';
     return (dst);
 }
-
-char    *check_rem(char *rem, char **line)
+size_t	ft_strlen(const char *str)
 {
-    char    *point;
+	size_t	i;
 
-    point = NULL;
-    if (rem)
-    {
-        if ((point = ft_strchr(rem, '\n')))
-        {
-            *point = '\0';
-            *line = ft_strdup(rem);
-            ft_strcpy(rem, ++point);
-        }
-        else
-        {
-            *line = ft_strdup(rem);
-            ft_strclr(rem);
-        }
-    } 
-    else
-        *line = ft_memalloc(1);
-    return (point);
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
 }
 
-int get_line(int fd, char **line)
+char	*ft_strdup(const char *s1)
+{
+	size_t	i;
+	char	*dst;
+
+	i = 0;
+	dst = (char *)malloc(ft_strlen(s1) + 1);
+	if (!dst)
+		return ((void *)0);
+	while (s1[i] != '\0')
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	i;
+	size_t	j;
+	char	*dst;
+
+	if (!s1 || !s2)
+		return (NULL);
+	dst = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!dst)
+		return (NULL);
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j] != '\0')
+		dst[i++] = s2[j++];
+	dst[i] = '\0';
+	return (dst);
+}
+
+char	*ft_strchr(const char *str, int ch)
+{
+	while (*str != ch && *str != '\0')
+		str++;
+	if (*str == ch)
+		return ((char *)str);
+	return (0);
+}
+
+
+/*int get_line(int fd, char **line)
 {
     char buf[BUFFER_SIZE + 1];
 	int len;
     char *point;
-    static char *rem;
+    static char *ost;
     char *tmp;
 
     point = NULL;
-    check_rem(rem, line);
+    check_ost(ost, line);
 	while (!point && (len = read(fd, buf, BUFFER_SIZE)))
 	{
         buf[len] = '\0';
         if ((point = ft_strchr(buf, '\n')))
         {
             *point = '\0';
-            rem = ft_strdup(++point);
+            ost = ft_strdup(++point);
         }
         tmp = *line;
-		*line = ft_strjoin(tmp, buf);
+		*line = ft_strjoin(*line, buf);
         free(tmp);
 	}
     return (0);
-}
+}*/
+char     *check_ost(char *ost, char **line)
+{
+    char *point;
 
+    point = NULL;
+    if (ost)
+    {
+        if ((point = ft_strchr(ost, '\n')))
+        {
+            *point = '\0';
+            *line = ft_strdup(ost);
+            ft_strcpy(ost, ++point);
+        }
+        else
+        {
+            *line = ft_strdup(ost);
+            ft_strclr(ost);
+        }
+    }
+    else
+        *line = ft_memalloc(1);
+    return (point);
+}
 int get_next_line(int fd, char **line)
 {
     int     bytes;
-    char    buf[BUFFER_SIZE + 1];
-
-    if (fd < 0 || !line || (read(fd, buf, BUFFER_SIZE)) < 0)
+    char    *buf;
+    char    *point;
+    static char    *ost;
+    char *tmp;
+ 
+    if (fd < 0 || !line || BUFFER_SIZE <= 0)
         return (-1);
-    while ((bytes = read(fd, buf, BUFFER_SIZE)) > 0)
+    if (!(buf = (char *) malloc(sizeof(char *) * (BUFFER_SIZE + 1))))
+        return (-1);
+    point = check_ost(ost, line);
+    while (!point && (bytes = read(fd, buf, BUFFER_SIZE)))
     {
         buf[bytes] = '\0';
+        if ((point = ft_strchr(buf, '\n')))
+        {
+            *point = '\0';
+            ost = ft_strdup(++point);
+        }
+        tmp = *line;
+		*line = ft_strjoin(*line, buf);
+        free(tmp);
+
     }
-    return (0);
+    return ((bytes || ft_strlen(ost)) ? 1: 0);
 }
 
 
-int main()
+/*int main()
 {
     int     fd;
     char    *line;
-    //int     i = 0;
     fd = open ("text.txt", O_RDONLY);
-
-    get_line(fd, &line);
-    printf("%s\n", line);
-    get_line(fd, &line);
-    printf("%s\n", line);
-    get_line(fd, &line);
-    printf("%s\n", line);
-    /*while (get_next_line(fd, &line) > 0)
-    {
-        printf("1");
-        printf("i = %d %s\n", i, line);
-        i++;
-    }*/
-    
+    while (get_next_line(fd, &line))
+        printf("%s\n", line);
     return (0);
-}
+}*/
