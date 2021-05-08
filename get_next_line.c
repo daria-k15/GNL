@@ -3,6 +3,7 @@
 #include <string.h>
 #include <fcntl.h>
 
+
 void    *ft_memalloc(size_t size)
 {
     char    *new;
@@ -41,32 +42,6 @@ char    *ft_strcpy(char *dst, const char *src)
     return (dst);
 }
 
-
-
-/*int get_line(int fd, char **line)
-{
-    char buf[BUFFER_SIZE + 1];
-	int len;
-    char *point;
-    static char *ost;
-    char *tmp;
-
-    point = NULL;
-    check_ost(ost, line);
-	while (!point && (len = read(fd, buf, BUFFER_SIZE)))
-	{
-        buf[len] = '\0';
-        if ((point = ft_strchr(buf, '\n')))
-        {
-            *point = '\0';
-            ost = ft_strdup(++point);
-        }
-        tmp = *line;
-		*line = ft_strjoin(*line, buf);
-        free(tmp);
-	}
-    return (0);
-}*/
 char     *check_ost(char *ost, char **line)
 {
     char *point;
@@ -97,8 +72,8 @@ int get_next_line(int fd, char **line)
     char    *point;
     static char    *ost;
     char *tmp;
- 
-    if (fd < 0 || !line || BUFFER_SIZE <= 0)
+    
+    if (fd < 0 || !line ||  BUFFER_SIZE <= 0)
         return (-1);
     if (!(buf = (char *) malloc(sizeof(char *) * (BUFFER_SIZE + 1))))
         return (-1);
@@ -114,9 +89,10 @@ int get_next_line(int fd, char **line)
         tmp = *line;
 		*line = ft_strjoin(*line, buf);
         free(tmp);
+        //free(buf);
 
     }
-    return ((bytes || ft_strlen(ost)) ? 1: 0);
+    return ((bytes || ft_strlen(ost)) ? 1 : 0);
 }
 
 
@@ -124,9 +100,12 @@ int main()
 {
     int     fd;
     char    *line;
-    fd = open ("alphabet", O_RDONLY);
-    while (get_next_line(fd, &line))
-        printf("%s\n", line);
-    return (0);
-}
+    char    *buf;
 
+    fd = open ("alphabet", O_RDONLY);
+    if (fd < 0 || !line)
+        return (-1);
+    if (!(buf = (char)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+        return (-1);
+    
+}
