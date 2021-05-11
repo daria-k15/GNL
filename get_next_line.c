@@ -3,10 +3,7 @@
 #include <fcntl.h>
 #include "get_next_line.h"
 
-
-
-
-int	ft_index(const char *str, int ch)
+int	index_search(const char *str, int ch)
 {
     size_t   i;
 
@@ -22,7 +19,7 @@ int get_line(char **line, char *buf, int i)
 {
     *line = ft_substr(buf, 0, i);
     ++i;
-    ft_memmove(buf, buf + i, (ft_strlen(buf + i) + 1));
+    ft_memcpy(buf, buf + i, (ft_strlen(buf + i) + 1));
     return(1);
 }
 int get_next_line(int fd, char **line)
@@ -34,13 +31,13 @@ int get_next_line(int fd, char **line)
    
     if (fd < 0 || !line || read(fd, 0, 0) < 0 || BUFFER_SIZE < 0)
         return (-1);
-    if (buf && (i = ft_index(buf, '\n')) != -1)
+    if (buf && (i = index_search(buf, '\n')) != -1)
         return (get_line(line, buf, i));      
-    while ((bytes = read(fd, tmp, BUFFER_SIZE)))
+    while ((bytes = read(fd, tmp, BUFFER_SIZE)) > 0)
     {
         tmp[bytes] = '\0';
         buf = ft_strjoin_free(buf, tmp);
-        if ((i = ft_index(buf, '\n')) != -1)
+        if ((i = index_search(buf, '\n')) != -1)
             return (get_line(line, buf, i));
     }
     if (buf)
@@ -53,7 +50,7 @@ int get_next_line(int fd, char **line)
     else 
         *line = ft_strdup("");
     return (bytes);
-    }
+}
 
 
 /*int main()
@@ -67,6 +64,7 @@ int get_next_line(int fd, char **line)
     {
         printf("|%s\n", line);
     }
+    printf("|%s", line);
 
 }*/
 
