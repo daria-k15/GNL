@@ -28,7 +28,7 @@ char	*ft_strdup(const char *s1)
 	return (dst);
 }
 
-char	*ft_strjoin_free(char *s1, char *s2)
+char	*ft_strjoinf(char *s1, char *s2)
 {
 	size_t	i;
 	size_t	j;

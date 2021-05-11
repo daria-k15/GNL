@@ -3,7 +3,6 @@
 #include <fcntl.h>
 #include "get_next_line.h"
 
-
 static int	index_search(const char *str, int ch)
 {
     size_t   i;
@@ -37,7 +36,7 @@ int get_next_line(int fd, char **line)
     while ((bytes = read(fd, tmp, BUFFER_SIZE)) > 0)
     {
         tmp[bytes] = '\0';
-        buf[fd] = ft_strjoin_free(buf[fd], tmp);
+        buf[fd] = ft_strjoinf(buf[fd], tmp);
         if ((i = index_search(buf[fd], '\n')) != -1)
             return (get_line(line, buf[fd], i));
     }
@@ -61,7 +60,7 @@ int get_next_line(int fd, char **line)
 	int             j;
 	char    *line;
 
-    j = 0;
+    j = 1;
 
 
 
