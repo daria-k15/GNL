@@ -38,7 +38,8 @@ char	*ft_strjoinf(char *s1, char *s2)
 		return (ft_strdup(s2));
 	if (!s2)
 		return (NULL);
-	if (!(dst = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
+	dst = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!dst)
 		return (NULL);
 	i = 0;
 	while (s1[i] != '\0')
@@ -69,14 +70,18 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	}
 	return (dst);
 }
-char		*ft_substr(char const *s, int start, int len)
+
+char	*ft_substr(char const *s, int start, int len)
 {
 	char	*str;
 	int		i;
 
 	if (!s)
 		return (NULL);
-	if (!(str = (char*)malloc((len + 1) * sizeof(char))))
+	if ((size_t)start > (size_t)ft_strlen(s))
+		return (NULL);
+	str = (char *)malloc((len + 1));
+	if (!str)
 		return (NULL);
 	i = 0;
 	while (i < len)
